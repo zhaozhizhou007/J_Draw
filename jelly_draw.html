@@ -1,11 +1,8 @@
  <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv=Content-Type content="text/html;charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="format-detection" content="telephone=no">
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
 
         <style type="text/css">
             .draw_box{
@@ -17,6 +14,10 @@
 
         </style>
         <script>
+
+            var rate = 900.0 / 640.0;
+
+
             var jWidth = 460, jHeight = 806;
             var bWidth = 100, bHeight = 50;
             var sWidth = 70, sHeight = 20;
@@ -91,23 +92,6 @@
                     offect_x+= offect;
                 }
 
-               
-
-                // if(inSink)
-                // {
-                //     if(curRotate <= 90)
-                //     {
-                //         curRotate += 0.5;
-                //         jContext.translate(offect_x,offect_y);
-                //         jContext.rotate(curRotate * (Math.PI/90));
-                //         jContext.drawImage(boat,0,0,100,50);
-
-                //     }
-            
-                // }else
-                //{
-                
-                //}
                 
                 jContext.restore();  // 恢复画笔状态.
 
@@ -157,17 +141,27 @@
 
 
             window.onload = function()
-            {
+            {   
+                var screenWidth = document.body.clientWidth;
+                jWidth = screenWidth;
+                jHeight = jWidth * rate;
+                console.log(jWidth + "--" + jHeight + "---rate:" + rate);
+
+                //设置背景大小.
+                document.getElementById('draw_bg').style.width=jWidth + "px"; 
+                document.getElementById('draw_bg').style.height=jHeight + "px"; 
+
                 jContext = document.getElementById('jellyCanvas').getContext("2d");
                 setInterval(jDraw,1000/30);
 
             }
 
+
         </script>
 
     </head>
     <body>
-             <div class="draw_box" style=" width:640px;height:806px;background:url(imgs/background.png);background-size:640px 960px;">
+             <div id="draw_bg" class="draw_box" style=" background:url(imgs/background.jpg);background-size:100% 100%;">
 
             </div>
 
