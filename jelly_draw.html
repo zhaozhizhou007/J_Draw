@@ -1,0 +1,179 @@
+ <!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+
+        <style type="text/css">
+            .draw_box{
+
+                position: absolute;
+                  left: 0px;
+                  top: 0px;
+            }
+
+        </style>
+        <script>
+            var jWidth = 460, jHeight = 806;
+            var bWidth = 100, bHeight = 50;
+            var sWidth = 70, sHeight = 20;
+            //小船图片资源.
+            var boat = new Image();
+            boat.src = "imgs/boat.png";
+            var boat_s = new Image();
+            boat_s.src = "imgs/boat_s.png"
+
+            var lipper01 = new Image();
+            lipper01.src = "imgs/lip01.png"
+            var lipper02 = new Image();
+            lipper02.src = "imgs/lip02.png"
+            var lipper03 = new Image();
+            lipper03.src = "imgs/lip03.png"
+
+
+            var lippers = [lipper01,lipper02,lipper03];
+
+
+
+
+            //开始下沉.
+            var inSink = false;
+            var curRotate = 0;
+            var offect_x = 450,offect_y = 620;
+
+            var jContext ;
+
+            //流逝的时间.
+            var elapse = 0;
+            var offect = -0.2;//偏移位置1
+            var delayTime = 60;
+            var delayLip = 80;
+
+            var endStop = true;
+            var endStopTime = 30;
+
+            var jDraw = function()
+            {
+
+                jContext.clearRect(0,0,1000,1000);
+                jContext.save();
+                // if(--delayTime > 0)
+                //     return;
+
+                //首先让船来回移动.
+                if(elapse > 600)
+                {
+                    offect = -offect;
+                    elapse = 0;
+                    endStop = true;
+                }
+
+                //先画波纹
+                jDrawLipper();
+                jContext.drawImage(boat_s,offect_x ,offect_y + 35,sWidth,sHeight);
+
+                jContext.drawImage(boat,offect_x ,offect_y,bWidth,bHeight);
+                
+                if(endStop )
+                {
+                    if(endStopTime-- < 0)
+                    {
+                        endStopTime = 30;
+                        endStop = false;
+
+                    }
+
+                }else {
+                    elapse++;
+                    offect_x+= offect;
+                }
+
+               
+
+                // if(inSink)
+                // {
+                //     if(curRotate <= 90)
+                //     {
+                //         curRotate += 0.5;
+                //         jContext.translate(offect_x,offect_y);
+                //         jContext.rotate(curRotate * (Math.PI/90));
+                //         jContext.drawImage(boat,0,0,100,50);
+
+                //     }
+            
+                // }else
+                //{
+                
+                //}
+                
+                jContext.restore();  // 恢复画笔状态.
+
+                
+            };
+
+            var curLippers = new Array();
+            //开始花水波
+            var jDrawLipper = function()
+            {   
+                var lipper = {
+                    //当前波纹持续时间
+                    curTime : 0,
+                    //当前波纹索引
+                    curIndex : 0,
+                    curPos_x : offect_x - 13,
+                    curPos_y : offect_y + 25
+
+                };
+                if(--delayLip < 0 )
+                {
+                    delayLip = 80;
+                    curLippers.push(lipper);
+                }
+                
+
+                for (var i = 0 ; i< curLippers.length; i++) {
+                    var cur = curLippers[i] ;
+                    cur.curTime ++;
+
+                    if(cur.curTime > 20)
+                    {
+                        cur.curIndex++;
+                        cur.curTime = 0;
+                    }
+
+                    if( cur.curIndex < 3 ){
+                        
+                       // var o_x = 
+                        jContext.drawImage(lippers[cur.curIndex],cur.curPos_x ,cur.curPos_y,bWidth,bHeight);
+
+                    }
+
+                };
+
+            }
+
+
+            window.onload = function()
+            {
+                jContext = document.getElementById('jellyCanvas').getContext("2d");
+                setInterval(jDraw,1000/30);
+
+            }
+
+        </script>
+
+    </head>
+    <body>
+             <div class="draw_box" style=" width:640px;height:806px;background:url(imgs/background.png);background-size:640px 960px;">
+
+            </div>
+
+            <canvas class="draw_box"  id="jellyCanvas" width="640" height="806" >
+                您的浏览器不支持canvas, 无法欣赏 jelly 的画作哦.
+            </canvas>
+    </body>
+    
+</html>
