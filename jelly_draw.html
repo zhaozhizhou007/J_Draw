@@ -5,6 +5,12 @@
             <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
 
         <style type="text/css">
+
+            body ,html{
+                padding: 0px;
+                margin: 0px;
+                width: 100%;
+            }
             .draw_box{
 
                 position: absolute;
@@ -15,12 +21,14 @@
         </style>
         <script>
 
-            var rate = 900.0 / 640.0;
+            //屏幕比例.
+            var rate = 889.0 / 640.0;
 
 
-            var jWidth = 460, jHeight = 806;
+            var jWidth = 640, jHeight = 889;
             var bWidth = 100, bHeight = 50;
             var sWidth = 70, sHeight = 20;
+            var pWidth = 100,pHeight = 80;
             //小船图片资源.
             var boat = new Image();
             boat.src = "imgs/boat.png";
@@ -34,16 +42,12 @@
             var lipper03 = new Image();
             lipper03.src = "imgs/lip03.png"
 
-
             var lippers = [lipper01,lipper02,lipper03];
-
-
-
 
             //开始下沉.
             var inSink = false;
             var curRotate = 0;
-            var offect_x = 450,offect_y = 620;
+            var offect_x = 0,offect_y = 0;
 
             var jContext ;
 
@@ -59,7 +63,7 @@
             var jDraw = function()
             {
 
-                jContext.clearRect(0,0,1000,1000);
+                jContext.clearRect(0,0,2000,2000);
                 jContext.save();
                 // if(--delayTime > 0)
                 //     return;
@@ -74,7 +78,8 @@
 
                 //先画波纹
                 jDrawLipper();
-                jContext.drawImage(boat_s,offect_x ,offect_y + 35,sWidth,sHeight);
+                //影子
+                jContext.drawImage(boat_s,offect_x + bWidth * 0.07,offect_y + bHeight/1.5,sWidth,sHeight);
 
                 jContext.drawImage(boat,offect_x ,offect_y,bWidth,bHeight);
                 
@@ -107,8 +112,8 @@
                     curTime : 0,
                     //当前波纹索引
                     curIndex : 0,
-                    curPos_x : offect_x - 13,
-                    curPos_y : offect_y + 25
+                    curPos_x : offect_x - bWidth * 0.2,
+                    curPos_y : offect_y + bHeight * 0.5
 
                 };
                 if(--delayLip < 0 )
@@ -130,7 +135,6 @@
 
                     if( cur.curIndex < 3 ){
                         
-                       // var o_x = 
                         jContext.drawImage(lippers[cur.curIndex],cur.curPos_x ,cur.curPos_y,bWidth,bHeight);
 
                     }
@@ -145,13 +149,33 @@
                 var screenWidth = document.body.clientWidth;
                 jWidth = screenWidth;
                 jHeight = jWidth * rate;
-                console.log(jWidth + "--" + jHeight + "---rate:" + rate);
+                console.log(jWidth + "--" + jHeight + "---rate:" + rate + "screenWidth" +document.body.offsetWidth );
 
                 //设置背景大小.
                 document.getElementById('draw_bg').style.width=jWidth + "px"; 
                 document.getElementById('draw_bg').style.height=jHeight + "px"; 
 
-                jContext = document.getElementById('jellyCanvas').getContext("2d");
+                //设置船的位置
+                offect_x = jWidth * 0.7;
+                offect_y = jHeight * 0.63;
+
+                //设置船的大小
+                bWidth      = jWidth * 0.2;
+                bHeight     = bWidth * (98.0/268.0);
+
+                //影子大小
+                sWidth     = bWidth * 0.55;
+                sHeight    = sWidth * (59.0/190.0);
+
+                //水波大小
+                pWidth    = bWidth * 1.2;
+                pHeight   = pWidth * (82.0/179.0);
+
+                var canvas  = document.getElementById('jellyCanvas'); 
+                jContext    = document.getElementById('jellyCanvas').getContext("2d");
+                canvas.width = jWidth;
+                canvas.height = jHeight;
+
                 setInterval(jDraw,1000/30);
 
             }
